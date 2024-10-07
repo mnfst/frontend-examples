@@ -9,16 +9,13 @@ import { TodoItemComponent } from '../todo-item/todo-item.component';
   templateUrl: './todo-list.component.html',
 })
 export class TodoListComponent implements OnChanges {
-  @Input() filter: string = 'all';
-
-  todos: Todo[] = [];
+  @Input() todos: Todo[] = [];
   activeTodos: Todo[] = [];
 
   constructor(private todosService: TodosService) {}
 
   async ngOnChanges(): Promise<void> {
-    this.todos = await this.todosService.getItems(this.filter);
-    this.activeTodos = await this.todosService.getItems('active');
+    this.activeTodos = this.todos.filter((todo) => !todo.completed);
   }
 
   async removeTodo(todo: Todo): Promise<void> {
@@ -26,8 +23,12 @@ export class TodoListComponent implements OnChanges {
     this.todos = this.todos.filter((t) => t.id !== todo.id);
   }
 
-  toggleAll(e: Event) {
+  async toggleAll(e: Event) {
     const input = e.target as HTMLInputElement;
-    this.todosService.toggleAll(input.checked);
+    await this.todosService.toggleAll(input.checked);
+    this.todos = this.todos.map((todo) => ({
+      ...todo,
+      completed: input.checked,
+    }));
   }
 }

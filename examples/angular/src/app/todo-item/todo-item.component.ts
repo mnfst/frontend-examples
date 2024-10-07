@@ -29,9 +29,9 @@ export class TodoItemComponent implements AfterViewChecked {
 
   constructor(private todosService: TodosService) {}
 
-  toggleTodo(): void {
+  async toggleTodo(): Promise<void> {
     this.todo.completed = !this.todo.completed;
-    this.todosService.updateItem(this.todo);
+    await this.todosService.updateItem(this.todo);
   }
 
   removeTodo(): void {
@@ -50,10 +50,13 @@ export class TodoItemComponent implements AfterViewChecked {
     this.title = this.todo.title;
   }
 
-  updateTodo() {
+  async updateTodo() {
+    console.log('updateTodo', this.todo, this.title);
+
     if (!this.title) {
       this.remove.emit(this.todo);
     } else {
+      await this.todosService.updateItem({ ...this.todo, title: this.title });
       this.todo.title = this.title;
     }
 

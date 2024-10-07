@@ -3,6 +3,7 @@ import { HeaderComponent } from './header/header.component';
 import { TodoListComponent } from './todo-list/todo-list.component';
 import { FooterComponent } from './footer/footer.component';
 import { ActivatedRoute, Params, RouterModule } from '@angular/router';
+import { Todo, TodosService } from './todos.service';
 
 @Component({
   selector: 'app-root',
@@ -11,13 +12,16 @@ import { ActivatedRoute, Params, RouterModule } from '@angular/router';
   templateUrl: './app.component.html',
 })
 export class AppComponent implements OnInit {
-  filter: string = '';
+  todos: Todo[] = [];
 
-  constructor(private activatedRoute: ActivatedRoute) {}
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private todosService: TodosService
+  ) {}
 
   ngOnInit(): void {
-    this.activatedRoute.queryParams.subscribe((params: Params) => {
-      this.filter = params['filter'] || 'all';
+    this.activatedRoute.queryParams.subscribe(async (params: Params) => {
+      this.todos = await this.todosService.getItems(params['filter']);
     });
   }
 }

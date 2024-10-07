@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { Location } from '@angular/common';
 import { Todo, TodosService } from '../todos.service';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-todo-footer',
@@ -19,7 +19,10 @@ export class FooterComponent implements OnInit {
   activeTodos: Todo[] = [];
   completedTodos: Todo[] = [];
 
-  constructor(private activatedRouter: ActivatedRoute) {}
+  constructor(
+    private activatedRouter: ActivatedRoute,
+    private router: Router
+  ) {}
 
   async ngOnInit(): Promise<void> {
     this.activatedRouter.queryParams.subscribe((params) => {
@@ -37,6 +40,9 @@ export class FooterComponent implements OnInit {
 
   clearCompleted() {
     this.todosService.clearCompleted();
+
+    // Force reload
+    this.router.navigate(['/'], { queryParams: { updatedAt: Date.now() } });
   }
 
   isActive(filter: string): boolean {
