@@ -1,0 +1,6 @@
+{
+  "yaml.schemas": {
+    "https://schema.manifest.build/schema.json": "**/manifest/**/*.yml"
+  },
+  "cSpell.words": ["todo", "todos"]
+}

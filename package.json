@@ -1,0 +1,17 @@
+{
+  "name": "manifest-frontend-examples",
+  "version": "0.1.0",
+  "description": "Example frontend implementation with Manifest. Based on the TodoMVC project.",
+  "scripts": {
+    "manifest": "node node_modules/manifest/scripts/watch/watch.js",
+    "manifest:seed": "node node_modules/manifest/dist/manifest/src/seed/scripts/seed.js",
+    "dev": "concurrently \"npm run manifest\" \"cd examples/angular && npm run dev\""
+  },
+  "workspaces": [
+    "examples/**/*"
+  ],
+  "dependencies": {
+    "manifest": "^4.0.2",
+    "concurrently": "^9.0.1"
+  }
+}

@@ -1,4 +1,3 @@
-
 <div align="center">
   <img src="https://github.com/user-attachments/assets/7afad85a-b285-4bd0-b36a-43f7558e2838" alt="todo app">
 </div>
@@ -17,17 +16,17 @@ All frontends share the common Manifest backend API and use the Manifest JS SDK.
 ├── manifest
 │   ├── backend.yml
 │   ├── backend.db
-├── nextjs
+├── examples
+│   ├── nextjs
+│   │   ├── **
+│   ├── react
+│   │   ├── **
+│   ├── svelte
+│   │   ├── **
 │   ├── **
-├── react
-│   ├── **
-├── svelte
-│   ├── **
-├── **
-│   ├── **
+│   │   ├── **
 ├── README.md
-├── node_modules
 ├── package.json
-├── package-lock.json
-└── .gitignore
+└── **
+
 ```
