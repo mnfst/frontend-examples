@@ -30,3 +30,14 @@ All frontends share the common Manifest backend API and use the Manifest JS SDK.
 └── **
 
 ```
+
+## Getting started
+
+To launch both the backend and a frontend, run those commands:
+
+```
+npm install
+npm install --workspaces
+
+npm run dev
+```
