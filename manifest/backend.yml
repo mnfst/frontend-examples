@@ -1,14 +1,7 @@
-name: My pet app
+name: My TODO App ✅
 entities:
-  😃 Owner:
+  Todo:
+    seedCount: 10
     properties:
-      - name
-      - { name: email, type: email }
-
-  😺 Cat:
-    properties:
-      - name
-      - { name: age, type: number }
-      - { name: birthdate, type: date }
-    belongsTo:
-      - Owner
+      - title
+      - { name: completed, type: boolean }
