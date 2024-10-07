@@ -1,0 +1,15 @@
+{
+  "name": "manifest-frontend-examples",
+  "version": "0.1.0",
+  "description": "Example frontend implementation with Manifest. Based on the TodoMVC project.",
+  "scripts": {
+    "manifest": "node node_modules/manifest/scripts/watch/watch.js",
+    "manifest:seed": "node node_modules/manifest/dist/manifest/src/seed/scripts/seed.js"
+  },
+  "workspaces": [
+    "examples/**/*"
+  ],
+  "dependencies": {
+    "manifest": "^4.0.1"
+  }
+}
