@@ -10,6 +10,6 @@
     "examples/**/*"
   ],
   "dependencies": {
-    "manifest": "^4.0.1"
+    "manifest": "^4.0.2"
   }
 }
