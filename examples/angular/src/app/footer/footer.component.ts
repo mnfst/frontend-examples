@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Location } from '@angular/common';
 import { Todo, TodosService } from '../todos.service';
-import { RouterLink } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-todo-footer',
@@ -9,20 +9,26 @@ import { RouterLink } from '@angular/router';
   imports: [RouterLink],
   templateUrl: './footer.component.html',
 })
-export class FooterComponent {
+export class FooterComponent implements OnInit {
   private location = inject(Location);
   private todosService = inject(TodosService);
 
-  get todos(): Todo[] {
-    return this.todosService.getItems();
-  }
+  currentFilter: string = '';
 
-  get activeTodos(): Todo[] {
-    return this.todosService.getItems('active');
-  }
+  todos: Todo[] = [];
+  activeTodos: Todo[] = [];
+  completedTodos: Todo[] = [];
 
-  get completedTodos(): Todo[] {
-    return this.todosService.getItems('completed');
+  constructor(private activatedRouter: ActivatedRoute) {}
+
+  async ngOnInit(): Promise<void> {
+    this.activatedRouter.queryParams.subscribe((params) => {
+      this.currentFilter = params['filter'] || 'all';
+    });
+
+    this.todos = await this.todosService.getItems();
+    this.activeTodos = await this.todosService.getItems('active');
+    this.completedTodos = await this.todosService.getItems('completed');
   }
 
   get filter(): string {
@@ -31,5 +37,9 @@ export class FooterComponent {
 
   clearCompleted() {
     this.todosService.clearCompleted();
+  }
+
+  isActive(filter: string): boolean {
+    return this.currentFilter === filter;
   }
 }

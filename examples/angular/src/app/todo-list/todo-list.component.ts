@@ -1,29 +1,29 @@
-import { Component, inject } from '@angular/core';
-import { Location } from '@angular/common';
+import { Component, Input, OnChanges } from '@angular/core';
 import { Todo, TodosService } from '../todos.service';
 import { TodoItemComponent } from '../todo-item/todo-item.component';
 
 @Component({
-    selector: 'app-todo-list',
-    standalone: true,
-    imports: [TodoItemComponent],
-    templateUrl: './todo-list.component.html',
+  selector: 'app-todo-list',
+  standalone: true,
+  imports: [TodoItemComponent],
+  templateUrl: './todo-list.component.html',
 })
-export class TodoListComponent {
-  private location = inject(Location);
-  private todosService = inject(TodosService);
+export class TodoListComponent implements OnChanges {
+  @Input() filter: string = 'all';
 
-  get todos(): Todo[] {
-    const filter = this.location.path().split('/')[1] || 'all';
-    return this.todosService.getItems(filter);
+  todos: Todo[] = [];
+  activeTodos: Todo[] = [];
+
+  constructor(private todosService: TodosService) {}
+
+  async ngOnChanges(): Promise<void> {
+    this.todos = await this.todosService.getItems(this.filter);
+    this.activeTodos = await this.todosService.getItems('active');
   }
 
-  get activeTodos(): Todo[] {
-    return this.todosService.getItems('active');
-  }
-
-  removeTodo(todo: Todo): void {
-    this.todosService.removeItem(todo);
+  async removeTodo(todo: Todo): Promise<void> {
+    await this.todosService.removeItem(todo);
+    this.todos = this.todos.filter((t) => t.id !== todo.id);
   }
 
   toggleAll(e: Event) {
