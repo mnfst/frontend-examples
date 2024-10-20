@@ -1,20 +1,35 @@
-import { useReducer } from "react";
 import { Header } from "./components/header";
 import { Main } from "./components/main";
 import { Footer } from "./components/footer";
-
-import { todoReducer } from "./reducer";
-
+import { useTodos } from "./useTodos";
 import "./app.css";
 
 export function App() {
-    const [todos, dispatch] = useReducer(todoReducer, []);
+  const {
+    todos,
+    loading,
+    addItem,
+    toggleAll,
+    toggleItem,
+    removeItem,
+    updateItem,
+    removeCompletedItems,
+  } = useTodos();
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-    return (
-        <>
-            <Header dispatch={dispatch} />
-            <Main todos={todos} dispatch={dispatch} />
-            <Footer todos={todos} dispatch={dispatch} />
-        </>
-    );
+  return (
+    <>
+      <Header addItem={addItem} />
+      <Main
+        todos={todos}
+        toggleAll={toggleAll}
+        toggleItem={toggleItem}
+        removeItem={removeItem}
+        updateItem={updateItem}
+      />
+      <Footer todos={todos} removeCompletedItems={removeCompletedItems} />
+    </>
+  );
 }
