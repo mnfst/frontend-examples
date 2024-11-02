@@ -26,11 +26,17 @@
         if (!editing) return;
         const { value } = event.target;
         if (value.length) {
-            item.description = value;
+            item.title = value;
+            dispatch('updateItem', item);
         } else {
           removeItem();
         }
         editing = false;
+    }
+
+    function toggleItem(item, event) {
+        dispatch('toggleItem', item);
+        item.completed = event.target.checked
     }
 
     async function focusInput(element) {
@@ -41,15 +47,15 @@
 
 <li class:completed={item.completed} class:editing>
     <div class="view">
-        <input class="toggle" type="checkbox" on:change={(event) => item.completed = event.target.checked} checked={item.completed} />
+        <input class="toggle" type="checkbox" on:change={(event) => toggleItem(item,event)} checked={item.completed} />
         <!-- svelte-ignore a11y-label-has-associated-control -->
-        <label on:dblclick={startEdit}>{item.description}</label>
+        <label on:dblclick={startEdit}>{item.title}</label>
         <button on:click={removeItem} class="destroy" />
     </div>
 
     {#if editing}
         <div class="input-container">
-            <input value={item.description} id="edit-todo-input" class="edit" on:keydown={handleEdit} on:blur={updateItem} use:focusInput />
+            <input value={item.title} id="edit-todo-input" class="edit" on:keydown={handleEdit} on:blur={updateItem} use:focusInput />
             <label class="visually-hidden" for="edit-todo-input">Edit Todo Input</label>
         </div>
     {/if}

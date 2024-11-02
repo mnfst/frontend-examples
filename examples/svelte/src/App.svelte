@@ -1,6 +1,9 @@
 <script>
     import { onMount } from 'svelte';
     import { router } from './router.js';
+    import Manifest from "@mnfst/sdk";
+
+    const manifest = new Manifest();
 
     import Header from './Header.svelte';
     import Footer from './Footer.svelte';
@@ -13,34 +16,57 @@
     let currentFilter = "all";
     let items = [];
 
-    function addItem(event) {
-        items.push({
-            id: crypto.randomUUID(), // This only works in secure-context.
-            description: event.detail.text,
+    async function fetchItems() {
+        const data = await manifest.from('todos').find();
+        items = data.data
+    }
+
+    async function addItem(event) {
+        const newItem = await manifest.from('todos').create({
+            title: event.detail.text,
             completed: false,
         });
+        items.push(newItem);
         items = items;
     }
 
-    function removeItem(index) {
+    async function removeItem(index) {
+        const item = items[index];
+        await manifest.from('todos').delete(item.id);
         items.splice(index, 1);
         items = items;
     }
 
-    function toggleAllItems(event) {
-        const checked = event.target.checked;
-        items = items.map((item) => ({
+    async function updateItem(item) {
+        await manifest.from('todos').update(item.id, item);
+    }
+
+    async function toggleItem(item) {
+        await manifest.from('todos').update(item.id, {
             ...item,
-            completed: checked,
+            completed: !item.completed,
+        });
+    }
+
+    async function toggleAllItems(event) {
+        items = await Promise.all(items.map(async (item) => {
+            const updatedItem = await manifest.from('todos').update(item.id, {
+                ...item,
+                completed: true,
+            });
+            return updatedItem;
         }));
     }
 
-    function removeCompletedItems() {
+    async function removeCompletedItems() {
+        const completedItems = items.filter((item) => item.completed);
+        await Promise.all(completedItems.map(item => manifest.from('todos').delete(item.id)));
         items = items.filter((item) => !item.completed);
     }
     
-    onMount(() => {
-      router(route => currentFilter = route).init();
+    onMount(async () => {
+        router(route => currentFilter = route).init();
+        await fetchItems();
     });
 
     $: filtered = currentFilter === "all" ? items : currentFilter === "completed" ? items.filter((item) => item.completed) : items.filter((item) => !item.completed);
@@ -58,7 +84,9 @@
         </div>
         <ul class="todo-list">
             {#each filtered as item, index (item.id)}
-                <Item bind:item on:removeItem={() => removeItem(index)} />
+                <Item bind:item
+                on:toggleItem={() => toggleItem(item)}
+                 on:updateItem={() => updateItem(item)} on:removeItem={() => removeItem(index)} />
             {/each}
         </ul>
 
