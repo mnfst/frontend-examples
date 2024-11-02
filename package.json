@@ -12,7 +12,7 @@
     "examples/**/*"
   ],
   "dependencies": {
-    "manifest": "^4.0.2",
+    "manifest": "^4.0.4",
     "concurrently": "^9.0.1"
   }
 }
