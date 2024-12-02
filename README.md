@@ -53,5 +53,10 @@ To launch both the backend and a frontend, run those commands:
 npm install
 npm install --workspaces
 
-npm run dev
+# Run Manifest backend and Angular frontend
+npm run dev-angular
+
+# Run Manifest backend and Svelte frontend
+npm run dev-svelte
+
 ```
