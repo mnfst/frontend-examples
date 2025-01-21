@@ -1,0 +1,7 @@
+name: My TODO App ✅
+entities:
+  Todo:
+    seedCount: 10
+    properties:
+      - title
+      - { name: completed, type: boolean }
